@@ -6,10 +6,12 @@ Introduction
 ------------
 
 
+
 Usage
 =======
 
-```
+
+This repository is also used as a submodule in [SymbTr repository](https://github.com/MTG/SymbTr). The paths in the jupyter notebooks in this repo are given according to the relative path of the submodule. f you want to use these notebooks outside the submodule, you can should change these paths accordingly.
 
 Installation
 ============
