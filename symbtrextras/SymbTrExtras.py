@@ -9,13 +9,16 @@ class TxtExtras:
                'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
         self.usuldict = json.load(open('./symbtrextras/data/usul_extended.json','r'))
 
+    @staticmethod
+    def getSymbTrData(txt_file, mu2_file):
+        txt_data = extractor.extract(txt_file)[0]
+        mu2_header = symbtrreader.readMu2Header(mu2_file)[0]
+
+        return extractor.merge(txt_data, mu2_header)  # merge
+
     def addUsul2FirstRow(self, txt_file, mu2_file):
         # extract symbtr data
-        txtdata = extractor.extract(txt_file)[0]
-        mu2header = symbtrreader.readMu2Header(mu2_file)[0]
-
-        data = extractor.merge(txtdata, mu2header)  # merge
-
+        data = self.getSymbTrData(txt_file, mu2_file)
         # get usul variant
         variant = {}
         for vrt in self.usuldict[data['usul']['symbtr_slug']]['variants']:
