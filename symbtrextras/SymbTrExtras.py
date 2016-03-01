@@ -3,7 +3,7 @@ from symbtrdataextractor import symbtrreader, extractor
 import pandas as pd 
 import json
 
-class SymbTrExtras:
+class TxtExtras:
     def __init__(self):
         self.symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
                'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
