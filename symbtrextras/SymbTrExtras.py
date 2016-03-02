@@ -7,7 +7,7 @@ class TxtExtras:
     def __init__(self):
         self.symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
                'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
-        self.usuldict = json.load(open('./symbtrextras/data/usul_extended.json','r'))
+        self.usul_dict = json.load(open('./symbtrextras/data/usul_extended.json','r'))
 
     @staticmethod
     def getSymbTrData(txt_file, mu2_file):
@@ -22,7 +22,7 @@ class TxtExtras:
 
         # get usul variant
         variant = {}
-        for vrt in self.usuldict[data['usul']['symbtr_slug']]['variants']:
+        for vrt in self.usul_dict[data['usul']['symbtr_slug']]['variants']:
             if vrt['mu2_name'] == data['usul']['mu2_name']:
                 variant = vrt
                 break
@@ -66,7 +66,7 @@ class TxtExtras:
         data = self.getSymbTrData(txt_file, mu2_file)
         
         # get zaman and mertebe from usul variant
-        for usul in self.usuldict.values():
+        for usul in self.usul_dict.values():
             for uv in usul['variants']:
                 if uv['mu2_name'] == data['usul']['mu2_name']:
                     mertebe = uv['mertebe']
