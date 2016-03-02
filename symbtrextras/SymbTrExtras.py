@@ -29,19 +29,23 @@ class ScoreExtras:
         return mbids
 
 class TxtExtras:
-    def __init__(self):
-        self.symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
+    symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
             'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
-        self.usul_dict = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-            'data', 'usul_extended.json')
+    usul_dict = json.load(open(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+            'data', 'usul_extended.json'), 'r'))
 
-    def addUsul2FirstRow(self, txt_file, mu2_file):
+    def __init__(self):
+        pass
+
+    @classmethod
+    def addUsul2FirstRow(cls, txt_file, mu2_file):
         # extract symbtr data
         data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
 
         # get usul variant
         variant = {}
-        for vrt in self.usul_dict[data['usul']['symbtr_slug']]['variants']:
+        for vrt in cls.usul_dict[data['usul']['symbtr_slug']]['variants']:
             if vrt['mu2_name'] == data['usul']['mu2_name']:
                 variant = vrt
                 break
@@ -69,23 +73,24 @@ class TxtExtras:
                 # reassign
                 df.iloc[index] = row
                 
-            df_usul = pd.concat([usul_row, df], ignore_index=True)[self.symbtr_cols]
+            df_usul = pd.concat([usul_row, df], ignore_index=True)[cls.symbtr_cols]
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
                 print data['symbtr'] + " starts with a different usul row. Correcting..."
-                df_usul = pd.concat([usul_row, df.ix[1:]], ignore_index=True)[self.symbtr_cols]
+                df_usul = pd.concat([usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
             else:
                 print data['symbtr'] + " starts with the usul row. Skipping..."
                 df_usul = df
 
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
-    def correctOffsetGracenote(self, txt_file, mu2_file):
+    @classmethod
+    def correctOffsetGracenote(cls, txt_file, mu2_file):
         # extract symbtr data
         data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
         
         # get zaman and mertebe from usul variant
-        for usul in self.usul_dict.values():
+        for usul in cls.usul_dict.values():
             for uv in usul['variants']:
                 if uv['mu2_name'] == data['usul']['mu2_name']:
                     mertebe = uv['mertebe']
