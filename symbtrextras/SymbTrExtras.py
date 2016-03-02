@@ -4,44 +4,46 @@ import pandas as pd
 import json
 import os
 
+
 class ScoreExtras:
     # load symbTr mbids
     _symbtr_mbid = json.load(open(
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-            '..', '..', 'symbTr_mbid.json'), 'r'))
+        os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                     '..', '..', 'symbTr_mbid.json'), 'r'))
 
     def __init__(self):
         pass
 
     @staticmethod
-    def getSymbTrData(txt_file, mu2_file):
+    def get_symbtr_data(txt_file, mu2_file):
         txt_data = extractor.extract(txt_file)[0]
         mu2_header = symbtrreader.readMu2Header(mu2_file)[0]
 
         return extractor.merge(txt_data, mu2_header)  # merge 
 
     @classmethod
-    def getMBIDs(cls, symbtr_name):
+    def get_mbids(cls, symbtr_name):
         mbids = []  # extremely rare but there can be more than one mbid 
         for e in cls._symbtr_mbid:
             if e['name'] == symbtr_name:
                 mbids.append(e['uuid'])
         return mbids
 
+
 class TxtExtras:
-    symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
-            'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
+    symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE',
+                   'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
     usul_dict = json.load(open(
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-            'data', 'usul_extended.json'), 'r'))
+        os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                     'data', 'usul_extended.json'), 'r'))
 
     def __init__(self):
         pass
 
     @classmethod
-    def addUsul2FirstRow(cls, txt_file, mu2_file):
+    def add_usul_to_first_row(cls, txt_file, mu2_file):
         # extract symbtr data
-        data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
+        data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
 
         # get usul variant
         variant = {}
@@ -56,12 +58,14 @@ class TxtExtras:
         # create the usul row
         # 1    51            0    0    zaman    mertebe    0    usul_symbtr_internal_id    0    usul_mu2_name    0
         # 1    51            0    0    6    4    0    90    0    Yürüksemâî (6/4)    0
-        usul_row = pd.DataFrame({'Sira':1, 'Kod':51, 'Nota53':'', 'NotaAE':'', 'Koma53':0, 'KomaAE':0,
-            'Pay':int(variant['num_pulses']),'Payda':int(variant['mertebe']),'Ms':0,'Offset':0,
-            'LNS':variant['symbtr_internal_id'],'Bas':0,'Soz1':variant['mu2_name']}, index=[0])
+        usul_row = pd.DataFrame({'Sira': 1, 'Kod': 51, 'Nota53': '', 'NotaAE': '', 'Koma53': 0, 'KomaAE': 0,
+                                 'Pay': int(variant['num_pulses']), 'Payda': int(variant['mertebe']), 'Ms': 0,
+                                 'Offset': 0,
+                                 'LNS': variant['symbtr_internal_id'], 'Bas': 0, 'Soz1': variant['mu2_name']},
+                                index=[0])
 
-        if not df.iloc[0]['Kod'] == 51:            
-            for index, row in df.iterrows():       
+        if not df.iloc[0]['Kod'] == 51:
+            for index, row in df.iterrows():
                 # change null to empty string
                 for key, val in row.iteritems():
                     if pd.isnull(val):
@@ -72,7 +76,7 @@ class TxtExtras:
 
                 # reassign
                 df.iloc[index] = row
-                
+
             df_usul = pd.concat([usul_row, df], ignore_index=True)[cls.symbtr_cols]
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
@@ -85,10 +89,10 @@ class TxtExtras:
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
     @classmethod
-    def correctOffsetGracenote(cls, txt_file, mu2_file):
+    def correct_offset_gracenote(cls, txt_file, mu2_file):
         # extract symbtr data
-        data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
-        
+        data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
+
         # get zaman and mertebe from usul variant
         for usul in cls.usul_dict.values():
             for uv in usul['variants']:
@@ -105,7 +109,7 @@ class TxtExtras:
                 row['Pay'] = 0
                 row['Payda'] = 0
                 row['Ms'] = 0
-                
+
             # recompute zaman and mertebe, if we hit kod 51
             if row['Kod'] == 51:
                 zaman = row['Pay']
@@ -113,27 +117,26 @@ class TxtExtras:
                 offset_incr = 0
             else:
                 # compute offset
-                offset_incr = 0 if row['Payda'] ==0 else float(row['Pay'])/row['Payda']*mertebe/zaman
+                offset_incr = 0 if row['Payda'] == 0 else float(row['Pay']) / row['Payda'] * mertebe / zaman
             if index == 0:
                 row['Offset'] = offset_incr
             else:
-                prev_row = df.iloc[index-1]
+                prev_row = df.iloc[index - 1]
                 row['Offset'] = offset_incr + prev_row['Offset']
-                        
+
             # change null to empty string
             for key, val in row.iteritems():
                 if pd.isnull(val):
                     row[key] = ''
-                    
+
             # make sure that "Sira" column continues consecutively
-            row['Sira'] = index+1
-            
+            row['Sira'] = index + 1
+
             # reassign
             df.iloc[index] = row
 
         # warn if the last measure end prematurely, i.e. the last note does not have an integer offset
-        if not (round(row['Offset']*10000)*0.0001).is_integer():
+        if not (round(row['Offset'] * 10000) * 0.0001).is_integer():
             print "Ends prematurely!"
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
-            
