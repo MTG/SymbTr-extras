@@ -2,23 +2,42 @@
 from symbtrdataextractor import symbtrreader, extractor
 import pandas as pd
 import json
+import os
 
-class TxtExtras:
+class ScoreExtras:
+    # load symbTr mbids
+    _symbtr_mbid = json.load(open(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+            '..', '..', 'symbTr_mbid.json'), 'r'))
+
     def __init__(self):
-        self.symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
-               'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
-        self.usul_dict = json.load(open('./symbtrextras/data/usul_extended.json','r'))
+        pass
 
     @staticmethod
     def getSymbTrData(txt_file, mu2_file):
         txt_data = extractor.extract(txt_file)[0]
         mu2_header = symbtrreader.readMu2Header(mu2_file)[0]
 
-        return extractor.merge(txt_data, mu2_header)  # merge        
+        return extractor.merge(txt_data, mu2_header)  # merge 
+
+    @classmethod
+    def getMBIDs(cls, symbtr_name):
+        mbids = []  # extremely rare but there can be more than one mbid 
+        for e in cls._symbtr_mbid:
+            if e['name'] == symbtr_name:
+                mbids.append(e['uuid'])
+        return mbids
+
+class TxtExtras:
+    def __init__(self):
+        self.symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE', 
+            'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
+        self.usul_dict = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+            'data', 'usul_extended.json')
 
     def addUsul2FirstRow(self, txt_file, mu2_file):
         # extract symbtr data
-        data = self.getSymbTrData(txt_file, mu2_file)
+        data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
 
         # get usul variant
         variant = {}
@@ -63,7 +82,7 @@ class TxtExtras:
 
     def correctOffsetGracenote(self, txt_file, mu2_file):
         # extract symbtr data
-        data = self.getSymbTrData(txt_file, mu2_file)
+        data = ScoreExtras.getSymbTrData(txt_file, mu2_file)
         
         # get zaman and mertebe from usul variant
         for usul in self.usul_dict.values():
