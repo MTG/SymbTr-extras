@@ -20,7 +20,7 @@ class ScoreExtras:
         txt_data = extractor.extract(txt_file)[0]
         mu2_header = symbtrreader.readMu2Header(mu2_file)[0]
 
-        return extractor.merge(txt_data, mu2_header)  # merge 
+        return extractor.merge(txt_data, mu2_header, verbose=False)
 
     @classmethod
     def get_mbids(cls, symbtr_name):
