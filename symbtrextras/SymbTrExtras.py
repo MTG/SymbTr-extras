@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from symbtrdataextractor import symbtrreader, extractor
+from musicxmlconverter.symbtr2musicxml import symbtrscore
 import pandas as pd
 import json
 import os
@@ -140,3 +141,11 @@ class TxtExtras:
             print "Ends prematurely!"
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+
+    @classmethod
+    def to_musicxml(cls, symbtr_name, txt_file, mu2_file):
+        mbids = ScoreExtras.get_mbids(symbtr_name)
+
+        # MusicXML conversion
+        piece = symbtrscore(txt_file, mu2_file, symbtrname=symbtr_name, mbid_url=mbids)
+        return piece.convertsymbtr2xml(verbose=False)
