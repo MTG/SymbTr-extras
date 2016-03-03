@@ -1,55 +1,9 @@
 # -*- coding: utf-8 -*-
-from symbtrdataextractor import symbtrreader, extractor
 from musicxmlconverter.symbtr2musicxml import symbtrscore
+from ScoreExtras import ScoreExtras
 import pandas as pd
-import json
 import os
 
-
-class ScoreExtras:
-    _symbtr_mbid = json.load(open(  # load symbTr mbids
-        os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                     '..', '..', 'symbTr_mbid.json'), 'r'))
-    usul_dict = json.load(open(  # usul dictionary
-        os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                     'data', 'usul_extended.json'), 'r'))
-
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def get_symbtr_data(txt_file, mu2_file):
-        txt_data = extractor.extract(txt_file)[0]
-        mu2_header = symbtrreader.readMu2Header(mu2_file)[0]
-
-        return extractor.merge(txt_data, mu2_header, verbose=False)
-
-    @classmethod
-    def get_mbids(cls, symbtr_name):
-        mbids = []  # extremely rare but there can be more than one mbid 
-        for e in cls._symbtr_mbid:
-            if e['name'] == symbtr_name:
-                mbids.append(e['uuid'])
-        return mbids
-
-    @classmethod
-    def parse_usul_dict(cls):
-        mu2_usul_dict = {}
-        inv_mu2_usul_dict = {}
-        for key, val in cls.usul_dict.iteritems():
-            for vrt in val['variants']:
-                if vrt['mu2_name']:  # if it doesn't have a mu2 name, the usul is not in symbtr collection
-                    zaman = int(vrt['num_pulses']) if vrt['num_pulses'] else []
-                    mertebe = int(vrt['mertebe']) if vrt['mertebe'] else []
-                    if vrt['mu2_name'] == '(Serbest)':
-                        zaman = 0
-                        mertebe = 0
-                    mu2_usul_dict[vrt['mu2_name']] = {'id':int(vrt['symbtr_internal_id']), 'zaman':zaman,
-                                                'mertebe':mertebe}
-
-                    inv_mu2_usul_dict[int(vrt['symbtr_internal_id'])] = {'mu2_name':vrt['mu2_name'],
-                                                                   'zaman':zaman, 'mertebe':mertebe}
-        return mu2_usul_dict, inv_mu2_usul_dict
 
 class TxtExtras:
     symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE',
@@ -57,6 +11,60 @@ class TxtExtras:
 
     def __init__(self):
         pass
+
+    @classmethod
+    def check_usul_row(cls, txt_file):
+        mu2_usul_dict, inv_mu2_usul_dict = ScoreExtras.parse_usul_dict()
+
+        df = pd.read_csv(txt_file, sep='\t', encoding='utf-8')
+
+        symbtr_name = os.path.splitext(txt_file)[0]
+
+        for index, row in df.iterrows():
+            # change null to empty string
+            row_changed = False
+            for key, val in row.iteritems():
+                if pd.isnull(val):
+                    row[key] = ''
+                    row_changed = True
+
+            if row['Kod'] == 51:
+                usul_id = row['LNS']
+                usul_name = row['Soz1']
+                if usul_name:  # name given
+                    # check if the usul pair matches with the mu2dict
+                    if mu2_usul_dict[usul_name]['id'] == usul_id:
+                        if not mu2_usul_dict[usul_name]['zaman'] == row['Pay']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
+                                  ' and zaman does not match.')
+                        if not mu2_usul_dict[usul_name]['mertebe'] == row['Payda']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
+                                  ' and mertebe does not match.')
+                    else:
+                        print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
+                              ' and ' + str(usul_id) + ' does not match.')
+                elif usul_id:
+                    if usul_id == -1:
+                        print(symbtr_name + ', line ' + str(index) + ': Missing usul info')
+                    else:
+                        print(symbtr_name + ', line ' + str(index) + ': Filling missing ' +
+                              inv_mu2_usul_dict[usul_id]['mu2_name'])
+                        row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
+                        if not inv_mu2_usul_dict[usul_id]['zaman'] == row['Pay']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
+                                  ' and zaman does not match.')
+                        if not inv_mu2_usul_dict[usul_id]['mertebe'] == row['Payda']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
+                                  ' and mertebe does not match.')
+                        row_changed = True
+                else:
+                    print("Unexpected operation")
+
+            # reassign
+            if row_changed:
+                df.iloc[index] = row
+
+        return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
     @classmethod
     def add_usul_to_first_row(cls, txt_file, mu2_file):
