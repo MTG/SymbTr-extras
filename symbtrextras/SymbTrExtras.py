@@ -32,6 +32,25 @@ class ScoreExtras:
                 mbids.append(e['uuid'])
         return mbids
 
+    @classmethod
+    def parse_usul_dict(cls):
+        mu2_usul_dict = {}
+        inv_mu2_usul_dict = {}
+        for key, val in cls.usul_dict.iteritems():
+            for vrt in val['variants']:
+                if vrt['mu2_name']:  # if it doesn't have a mu2 name, the usul is not in symbtr collection
+                    zaman = int(vrt['num_pulses']) if vrt['num_pulses'] else []
+                    mertebe = int(vrt['mertebe']) if vrt['mertebe'] else []
+                    if vrt['mu2_name'] == '(Serbest)':
+                        zaman = 0
+                        mertebe = 0
+                    mu2_usul_dict[vrt['mu2_name']] = {'id':int(vrt['symbtr_internal_id']), 'zaman':zaman,
+                                                'mertebe':mertebe}
+
+                    inv_mu2_usul_dict[int(vrt['symbtr_internal_id'])] = {'mu2_name':vrt['mu2_name'],
+                                                                   'zaman':zaman, 'mertebe':mertebe}
+        return mu2_usul_dict, inv_mu2_usul_dict
+
 class TxtExtras:
     symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE',
                    'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
