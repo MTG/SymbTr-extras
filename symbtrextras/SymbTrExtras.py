@@ -7,10 +7,12 @@ import os
 
 
 class ScoreExtras:
-    # load symbTr mbids
-    _symbtr_mbid = json.load(open(
+    _symbtr_mbid = json.load(open(  # load symbTr mbids
         os.path.join(os.path.dirname(os.path.abspath(__file__)),
                      '..', '..', 'symbTr_mbid.json'), 'r'))
+    usul_dict = json.load(open(  # usul dictionary
+        os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                     'data', 'usul_extended.json'), 'r'))
 
     def __init__(self):
         pass
@@ -30,13 +32,9 @@ class ScoreExtras:
                 mbids.append(e['uuid'])
         return mbids
 
-
 class TxtExtras:
     symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE',
                    'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
-    usul_dict = json.load(open(
-        os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                     'data', 'usul_extended.json'), 'r'))
 
     def __init__(self):
         pass
@@ -48,7 +46,7 @@ class TxtExtras:
 
         # get usul variant
         variant = {}
-        for vrt in cls.usul_dict[data['usul']['symbtr_slug']]['variants']:
+        for vrt in ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']:
             if vrt['mu2_name'] == data['usul']['mu2_name']:
                 variant = vrt
                 break
@@ -95,7 +93,7 @@ class TxtExtras:
         data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
 
         # get zaman and mertebe from usul variant
-        for usul in cls.usul_dict.values():
+        for usul in ScoreExtras.usul_dict.values():
             for uv in usul['variants']:
                 if uv['mu2_name'] == data['usul']['mu2_name']:
                     mertebe = uv['mertebe']
