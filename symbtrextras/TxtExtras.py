@@ -35,27 +35,33 @@ class TxtExtras:
                     # check if the usul pair matches with the mu2dict
                     if mu2_usul_dict[usul_name]['id'] == usul_id:
                         if not mu2_usul_dict[usul_name]['zaman'] == row['Pay']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
-                                  ' and zaman does not match.')
-                        if not mu2_usul_dict[usul_name]['mertebe'] == row['Payda']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
-                                  ' and mertebe does not match.')
+                            print(symbtr_name + ', line ' + str(index) + ': ' +
+                                  usul_name + ' and zaman does not match.')
+                        if not mu2_usul_dict[usul_name]['mertebe'] == \
+                                row['Payda']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' +
+                                  usul_name + ' and mertebe does not match.')
                     else:
-                        print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
-                              ' and ' + str(usul_id) + ' does not match.')
+                        print(symbtr_name + ', line ' + str(index) + ': ' +
+                              usul_name + ' and ' + str(usul_id) + ' does ' +
+                              'not match.')
                 elif usul_id:
                     if usul_id == -1:
-                        print(symbtr_name + ', line ' + str(index) + ': Missing usul info')
+                        print(symbtr_name + ', line ' + str(index) +
+                              ': Missing usul info')
                     else:
-                        print(symbtr_name + ', line ' + str(index) + ': Filling missing ' +
+                        print(symbtr_name + ', line ' + str(index) +
+                              ': Filling missing ' +
                               inv_mu2_usul_dict[usul_id]['mu2_name'])
                         row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
-                        if not inv_mu2_usul_dict[usul_id]['zaman'] == row['Pay']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
-                                  ' and zaman does not match.')
-                        if not inv_mu2_usul_dict[usul_id]['mertebe'] == row['Payda']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' + usul_name +
-                                  ' and mertebe does not match.')
+                        if not inv_mu2_usul_dict[usul_id]['zaman'] == \
+                                row['Pay']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' +
+                                  usul_name + ' and zaman does not match.')
+                        if not inv_mu2_usul_dict[usul_id]['mertebe'] == \
+                                row['Payda']:
+                            print(symbtr_name + ', line ' + str(index) + ': ' +
+                                  usul_name + ' and mertebe does not match.')
                         row_changed = True
                 else:
                     print("Unexpected operation")
@@ -84,11 +90,12 @@ class TxtExtras:
         # create the usul row
         # 1    51            0    0    zaman    mertebe    0    usul_symbtr_internal_id    0    usul_mu2_name    0
         # 1    51            0    0    6    4    0    90    0    Yürüksemâî (6/4)    0
-        usul_row = pd.DataFrame({'Sira': 1, 'Kod': 51, 'Nota53': '', 'NotaAE': '', 'Koma53': 0, 'KomaAE': 0,
-                                 'Pay': int(variant['num_pulses']), 'Payda': int(variant['mertebe']), 'Ms': 0,
-                                 'Offset': 0,
-                                 'LNS': variant['symbtr_internal_id'], 'Bas': 0, 'Soz1': variant['mu2_name']},
-                                index=[0])
+        usul_row = pd.DataFrame(
+            {'Sira': 1, 'Kod': 51, 'Nota53': '', 'NotaAE': '', 'Koma53': 0,
+             'KomaAE': 0, 'Pay': int(variant['num_pulses']),
+             'Payda': int(variant['mertebe']), 'Ms': 0, 'Offset': 0,
+             'LNS': variant['symbtr_internal_id'], 'Bas': 0,
+             'Soz1': variant['mu2_name']}, index=[0])
 
         if not df.iloc[0]['Kod'] == 51:
             for index, row in df.iterrows():
@@ -98,16 +105,20 @@ class TxtExtras:
                         row[key] = ''
 
                 # make sure that "Sira" column continues consecutively
-                row['Sira'] = index + 2  # 2 instead of 1, since we also add the usul row to the start
+                row['Sira'] = index + 2  # 2 instead of 1, since we also add
+                # the usul row to the start
 
                 # reassign
                 df.iloc[index] = row
 
-            df_usul = pd.concat([usul_row, df], ignore_index=True)[cls.symbtr_cols]
+            df_usul = pd.concat(
+                [usul_row, df], ignore_index=True)[cls.symbtr_cols]
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
-                print data['symbtr'] + " starts with a different usul row. Correcting..."
-                df_usul = pd.concat([usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
+                print data['symbtr'] + " starts with a different usul row. " \
+                                       "Correcting..."
+                df_usul = pd.concat(
+                    [usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
             else:
                 print data['symbtr'] + " starts with the usul row. Skipping..."
                 df_usul = df
@@ -143,7 +154,8 @@ class TxtExtras:
                 offset_incr = 0
             else:
                 # compute offset
-                offset_incr = 0 if row['Payda'] == 0 else float(row['Pay']) / row['Payda'] * mertebe / zaman
+                offset_incr = 0 if row['Payda'] == 0 else \
+                    float(row['Pay']) / row['Payda'] * mertebe / zaman
             if index == 0:
                 row['Offset'] = offset_incr
             else:
@@ -161,7 +173,8 @@ class TxtExtras:
             # reassign
             df.iloc[index] = row
 
-        # warn if the last measure end prematurely, i.e. the last note does not have an integer offset
+        # warn if the last measure end prematurely, i.e. the last note does not
+        #  have an integer offset
         if not (round(row['Offset'] * 10000) * 0.0001).is_integer():
             print "Ends prematurely!"
 
@@ -172,5 +185,6 @@ class TxtExtras:
         mbids = ScoreExtras.get_mbids(symbtr_name)
 
         # MusicXML conversion
-        piece = symbtrscore(txt_file, mu2_file, symbtrname=symbtr_name, mbid_url=mbids)
+        piece = symbtrscore(txt_file, mu2_file, symbtrname=symbtr_name,
+                            mbid_url=mbids)
         return piece.convertsymbtr2xml(verbose=False)
