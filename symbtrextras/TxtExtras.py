@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from musicxmlconverter.symbtr2musicxml import symbtrscore
+from musicxmlconverter.symbtr2musicxml import SymbTrScore
 from ScoreExtras import ScoreExtras
 import pandas as pd
 import os
@@ -185,6 +185,6 @@ class TxtExtras:
         mbids = ScoreExtras.get_mbids(symbtr_name)
 
         # MusicXML conversion
-        piece = symbtrscore(txt_file, mu2_file, symbtrname=symbtr_name,
+        piece = SymbTrScore(txt_file, mu2_file, symbtrname=symbtr_name,
                             mbid_url=mbids)
         return piece.convertsymbtr2xml(verbose=False)
