@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import urllib
 import os
 import subprocess
 from symbtrdataextractor.SymbTrReader import SymbTrReader
@@ -7,9 +8,32 @@ from symbtrdataextractor.SymbTrDataExtractor import SymbTrDataExtractor
 
 
 class ScoreExtras:
-    _symbtr_mbid = json.load(open(  # load symbTr mbids
-        os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                     '..', '..', 'symbTr_mbid.json'), 'r'))
+    @staticmethod
+    def _read_symbtr_mbid():
+        try:
+            url = "https://raw.githubusercontent.com/MTG/SymbTr/master/" \
+                  "symbTr_mbid.json"
+            response = urllib.urlopen(url)
+            return json.loads(response.read())
+        except IOError:  # if it is called from the submodule location or it
+            # was installed with "pip install -e ." we can refer to the json
+            # in the local repo
+            try:
+                print("Cannot access the symbtr_mbid.json in the github "
+                      "SymbTr repository. Falling back to the json file in "
+                      "the local SymbTr repository.")
+                return json.load(open(  # load symbTr mbids
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 '..', '..', 'symbTr_mbid.json'), 'r'))
+            except IOError:
+                print("symbtr_mbid.json is not found in the local search "
+                      "path. Using the back-up symbtr_mbid.json included in "
+                      "this repository. WARNING: the file might be outdated.")
+                return json.load(open(  # load symbTr mbids
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 'data', 'symbTr_mbid.json'), 'r'))
+
+    _symbtr_mbid = _read_symbtr_mbid.__func__()
     _iconv_map = {'utf-16le': 'UTF-16',
                   'Little-endian UTF-16 Unicode': 'UTF-16',
                   'iso-8859-1': 'ISO_8859-9', 'ISO-8859': 'ISO_8859-9'}
