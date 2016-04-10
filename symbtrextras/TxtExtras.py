@@ -13,8 +13,8 @@ class TxtExtras:
     def __init__(self):
         pass
 
-    @classmethod
-    def check_usul_row(cls, txt_file):
+    @staticmethod
+    def check_usul_row(txt_file):
         mu2_usul_dict, inv_mu2_usul_dict = ScoreExtras.parse_usul_dict()
 
         df = pd.read_csv(txt_file, sep='\t', encoding='utf-8')
@@ -189,8 +189,8 @@ class TxtExtras:
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
-    @classmethod
-    def to_musicxml(cls, symbtr_name, txt_file, mu2_file):
+    @staticmethod
+    def to_musicxml(symbtr_name, txt_file, mu2_file):
         mbids = ScoreExtras.get_mbids(symbtr_name)
 
         # MusicXML conversion
