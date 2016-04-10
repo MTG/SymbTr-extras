@@ -3,6 +3,7 @@ from musicxmlconverter.symbtr2musicxml import SymbTrScore
 from ScoreExtras import ScoreExtras
 import pandas as pd
 import os
+import warnings
 
 
 class TxtExtras:
@@ -35,36 +36,47 @@ class TxtExtras:
                     # check if the usul pair matches with the mu2dict
                     if mu2_usul_dict[usul_name]['id'] == usul_id:
                         if not mu2_usul_dict[usul_name]['zaman'] == row['Pay']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' +
-                                  usul_name + ' and zaman does not match.')
+                            warnings.warn(
+                                '{0:s} , line {1:s}: {2:s} and zaman does '
+                                'not match.'.format(symbtr_name, str(index),
+                                                    usul_name))
                         if not mu2_usul_dict[usul_name]['mertebe'] == \
                                 row['Payda']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' +
-                                  usul_name + ' and mertebe does not match.')
+                            warnings.warn(
+                                '{0:s}, line {1:s}: {2:s} and mertebe does not '
+                                'match.'.format(symbtr_name, str(index),
+                                                usul_name))
                     else:
-                        print(symbtr_name + ', line ' + str(index) + ': ' +
-                              usul_name + ' and ' + str(usul_id) + ' does ' +
-                              'not match.')
+                        warnings.warn(
+                            '{0:s}, line {1:s}: {2:s} and {3:s} does not '
+                            'match.'.format(symbtr_name, str(index),
+                                            usul_name, str(usul_id)))
                 elif usul_id:
                     if usul_id == -1:
-                        print(symbtr_name + ', line ' + str(index) +
-                              ': Missing usul info')
+                        warnings.warn(
+                            '{0:s}, line {1:s}: Missing usul info'.format(
+                                symbtr_name, str(index)))
                     else:
-                        print(symbtr_name + ', line ' + str(index) +
-                              ': Filling missing ' +
-                              inv_mu2_usul_dict[usul_id]['mu2_name'])
+                        warnings.warn(
+                            '{0:s}, line {1:s}: Filling missing {2:s}'.format(
+                                symbtr_name, str(index),
+                                inv_mu2_usul_dict[usul_id]['mu2_name']))
                         row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
                         if not inv_mu2_usul_dict[usul_id]['zaman'] == \
                                 row['Pay']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' +
-                                  usul_name + ' and zaman does not match.')
+                            warnings.warn(
+                                '{0:s}, line {1:s}: {2:s} and zaman does '
+                                'not match.'.format(symbtr_name, str(index),
+                                                    usul_name))
                         if not inv_mu2_usul_dict[usul_id]['mertebe'] == \
                                 row['Payda']:
-                            print(symbtr_name + ', line ' + str(index) + ': ' +
-                                  usul_name + ' and mertebe does not match.')
+                            warnings.warn(
+                                '{0:s}, line {1:s}: {2:s} and mertebe does '
+                                'not match.'.format(symbtr_name, str(index),
+                                                    usul_name))
                         row_changed = True
                 else:
-                    print("Unexpected operation")
+                    warnings.warn("Unexpected operation")
 
             # reassign
             if row_changed:
@@ -99,10 +111,7 @@ class TxtExtras:
 
         if not df.iloc[0]['Kod'] == 51:
             for index, row in df.iterrows():
-                # change null to empty string
-                for key, val in row.iteritems():
-                    if pd.isnull(val):
-                        row[key] = ''
+                cls._change_null_to_empty_str(row)
 
                 # make sure that "Sira" column continues consecutively
                 row['Sira'] = index + 2  # 2 instead of 1, since we also add
@@ -115,12 +124,13 @@ class TxtExtras:
                 [usul_row, df], ignore_index=True)[cls.symbtr_cols]
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
-                print data['symbtr'] + " starts with a different usul row. " \
-                                       "Correcting..."
+                print(data['symbtr'] + " starts with a different usul row. "
+                                       "Correcting...")
                 df_usul = pd.concat(
                     [usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
             else:
-                print data['symbtr'] + " starts with the usul row. Skipping..."
+                print(data['symbtr'] + " starts with the usul row. "
+                                       "Skipping...")
                 df_usul = df
 
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
@@ -163,9 +173,7 @@ class TxtExtras:
                 row['Offset'] = offset_incr + prev_row['Offset']
 
             # change null to empty string
-            for key, val in row.iteritems():
-                if pd.isnull(val):
-                    row[key] = ''
+            cls._change_null_to_empty_str(row)
 
             # make sure that "Sira" column continues consecutively
             row['Sira'] = index + 1
@@ -176,7 +184,7 @@ class TxtExtras:
         # warn if the last measure end prematurely, i.e. the last note does not
         #  have an integer offset
         if not (round(row['Offset'] * 10000) * 0.0001).is_integer():
-            print "Ends prematurely!"
+            warnings.warn("Ends prematurely!")
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
@@ -188,3 +196,10 @@ class TxtExtras:
         piece = SymbTrScore(txt_file, mu2_file, symbtrname=symbtr_name,
                             mbid_url=mbids)
         return piece.convertsymbtr2xml(verbose=False)
+
+    @staticmethod
+    def _change_null_to_empty_str(row):
+        # change null to empty string
+        for key, val in row.iteritems():
+            if pd.isnull(val):
+                row[key] = ''

@@ -3,7 +3,8 @@ import json
 import urllib
 import os
 import subprocess
-from symbtrdataextractor.SymbTrReader import SymbTrReader
+import warnings
+from symbtrdataextractor.reader.Mu2Reader import Mu2Reader
 from symbtrdataextractor.SymbTrDataExtractor import SymbTrDataExtractor
 
 
@@ -19,21 +20,20 @@ class ScoreExtras:
             # was installed with "pip install -e ." we can refer to the json
             # in the local repo
             try:
-                print("Cannot access the symbtr_mbid.json in the github "
-                      "SymbTr repository. Falling back to the json file in "
-                      "the local SymbTr repository.")
+                warnings.warn("Cannot access the symbtr_mbid.json in the "
+                              "github SymbTr repository. Falling back to the "
+                              "json file in the local SymbTr repository.")
                 return json.load(open(  # load symbTr mbids
                     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  '..', '..', 'symbTr_mbid.json'), 'r'))
             except IOError:
-                print("symbtr_mbid.json is not found in the local search "
-                      "path. Using the back-up symbtr_mbid.json included in "
-                      "this repository. WARNING: the file might be outdated.")
+                warnings.warn("symbtr_mbid.json is not found in the local "
+                              "search path. Using the back-up "
+                              "symbtr_mbid.json included in this repository.")
                 return json.load(open(  # load symbTr mbids
                     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data', 'symbTr_mbid.json'), 'r'))
 
-    _symbtr_mbid = _read_symbtr_mbid.__func__()
     _iconv_map = {'utf-16le': 'UTF-16',
                   'Little-endian UTF-16 Unicode': 'UTF-16',
                   'iso-8859-1': 'ISO_8859-9', 'ISO-8859': 'ISO_8859-9'}
@@ -49,14 +49,14 @@ class ScoreExtras:
         extractor = SymbTrDataExtractor()
         txt_data = extractor.extract(txt_file)[0]
 
-        mu2_header = SymbTrReader.read_mu2_header(mu2_file)[0]
+        mu2_header = Mu2Reader.read_header(mu2_file)[0]
 
         return extractor.merge(txt_data, mu2_header, verbose=False)
 
     @classmethod
     def get_mbids(cls, symbtr_name):
         mbids = []  # extremely rare but there can be more than one mbid
-        for e in cls._symbtr_mbid:
+        for e in ScoreExtras._read_symbtr_mbid():
             if e['name'] == symbtr_name:
                 mbids.append(e['uuid'])
         return mbids
@@ -104,7 +104,7 @@ class ScoreExtras:
 
             if not any(curr_charset in charset for charset in ['utf-8',
                                                                'us-ascii']):
-                print curr_charset + '\t' + score_file
+                print(curr_charset + '\t' + score_file)
                 commandstr = ("iconv -f " + cls._iconv_map[curr_charset] +
                               " -t UTF-8 " + score_file + " > tmp.txt "
                               "&& mv -f tmp.txt " + score_file)
