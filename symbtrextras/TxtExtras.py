@@ -43,9 +43,9 @@ class TxtExtras:
                         if not mu2_usul_dict[usul_name]['mertebe'] == \
                                 row['Payda']:
                             warnings.warn(
-                                '{0:s}, line {1:s}: {2:s} and mertebe does not '
-                                'match.'.format(symbtr_name, str(index),
-                                                usul_name))
+                                '{0:s}, line {1:s}: {2:s} and mertebe does '
+                                'not match.'.format(symbtr_name, str(index),
+                                                    usul_name))
                     else:
                         warnings.warn(
                             '{0:s}, line {1:s}: {2:s} and {3:s} does not '
@@ -91,9 +91,10 @@ class TxtExtras:
 
         # get usul variant
         variant = {}
-        for vrt in ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']:
-            if vrt['mu2_name'] == data['usul']['mu2_name']:
-                variant = vrt
+        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']
+        for v in vrts:
+            if v['mu2_name'] == data['usul']['mu2_name']:
+                variant = v
                 break
 
         # read the txt score
