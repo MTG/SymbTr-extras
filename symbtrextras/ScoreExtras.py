@@ -115,7 +115,7 @@ class ScoreExtras:
 
             if not any(curr_charset in charset for charset in ['UTF-8 Unicode',
                                                                'ASCII']):
-                print curr_charset + '\t' + score_file
+                print(curr_charset + '\t' + score_file)
                 commandstr = ("iconv -f " + cls._iconv_map[curr_charset] +
                               " -t UTF-8 " + score_file + " > tmp.txt "
                               "&& mv -f tmp.txt " + score_file)
