@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='symbtrextras',
-    version='0.2.dev',
+    version='0.3.dev',
     author='Sertan Senturk',
     author_email='contact AT sertansenturk DOT com',
     license='agpl 3.0',
