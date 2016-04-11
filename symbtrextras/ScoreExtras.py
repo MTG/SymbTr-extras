@@ -110,13 +110,4 @@ class ScoreExtras:
                               "&& mv -f tmp.txt " + score_file)
                 subprocess.check_output(commandstr, shell=True)
         except IndexError:  # mac
-            out = subprocess.check_output("file -b " + score_file, shell=True)
-            curr_charset = out.split(' text')[0]
-
-            if not any(curr_charset in charset for charset in ['UTF-8 Unicode',
-                                                               'ASCII']):
-                print(curr_charset + '\t' + score_file)
-                commandstr = ("iconv -f " + cls._iconv_map[curr_charset] +
-                              " -t UTF-8 " + score_file + " > tmp.txt "
-                              "&& mv -f tmp.txt " + score_file)
-                subprocess.check_output(commandstr, shell=True)
+            raise OSError('Call this method in Linux for reliable results.')

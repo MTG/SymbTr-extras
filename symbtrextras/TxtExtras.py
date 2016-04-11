@@ -40,6 +40,7 @@ class TxtExtras:
                                 '{0:s} , line {1:s}: {2:s} and zaman does '
                                 'not match.'.format(symbtr_name, str(index),
                                                     usul_name))
+
                         if not mu2_usul_dict[usul_name]['mertebe'] == \
                                 row['Payda']:
                             warnings.warn(
