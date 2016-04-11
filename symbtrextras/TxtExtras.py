@@ -35,18 +35,12 @@ class TxtExtras:
                 if usul_name:  # name given
                     # check if the usul pair matches with the mu2dict
                     if mu2_usul_dict[usul_name]['id'] == usul_id:
-                        if not mu2_usul_dict[usul_name]['zaman'] == row['Pay']:
-                            warnings.warn(
-                                '{0:s} , line {1:s}: {2:s} and zaman does '
-                                'not match.'.format(symbtr_name, str(index),
-                                                    usul_name))
-
-                        if not mu2_usul_dict[usul_name]['mertebe'] == \
-                                row['Payda']:
-                            warnings.warn(
-                                '{0:s}, line {1:s}: {2:s} and mertebe does '
-                                'not match.'.format(symbtr_name, str(index),
-                                                    usul_name))
+                        TxtExtras._chk_usul_attr(
+                            row, mu2_usul_dict[usul_name], 'zaman',
+                            symbtr_name, index, usul_name)
+                        TxtExtras._chk_usul_attr(
+                            row, mu2_usul_dict[usul_name], 'mertebe',
+                            symbtr_name, index, usul_name)
                     else:
                         warnings.warn(
                             '{0:s}, line {1:s}: {2:s} and {3:s} does not '
@@ -63,18 +57,13 @@ class TxtExtras:
                                 symbtr_name, str(index),
                                 inv_mu2_usul_dict[usul_id]['mu2_name']))
                         row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
-                        if not inv_mu2_usul_dict[usul_id]['zaman'] == \
-                                row['Pay']:
-                            warnings.warn(
-                                '{0:s}, line {1:s}: {2:s} and zaman does '
-                                'not match.'.format(symbtr_name, str(index),
-                                                    usul_name))
-                        if not inv_mu2_usul_dict[usul_id]['mertebe'] == \
-                                row['Payda']:
-                            warnings.warn(
-                                '{0:s}, line {1:s}: {2:s} and mertebe does '
-                                'not match.'.format(symbtr_name, str(index),
-                                                    usul_name))
+                        
+                        TxtExtras._chk_usul_attr(
+                            row, inv_mu2_usul_dict[usul_id], 'zaman',
+                            symbtr_name, index, usul_name)
+                        TxtExtras._chk_usul_attr(
+                            row, inv_mu2_usul_dict[usul_id], 'mertebe',
+                            symbtr_name, index, usul_name)
                         row_changed = True
                 else:
                     warnings.warn("Unexpected operation")
@@ -84,6 +73,18 @@ class TxtExtras:
                 df.iloc[index] = row
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+
+    @staticmethod
+    def _chk_usul_attr(row, usul, attr_str, symbtr_name, index, usul_name):
+        if attr_str == 'Payda':
+            row_str = 'mertebe'
+        elif attr_str == 'Pay':
+            row_str = 'zaman'
+        else:
+            raise ValueError('Unexpected usul attribute: %s' % (attr_str))
+        if not usul[attr_str] == row[row_str]:
+            warnings.warn('{0:s}, line {1:s}: {2:s} and {3:s} does not match.'.
+                          format(symbtr_name, str(index), usul_name), attr_str)
 
     @classmethod
     def add_usul_to_first_row(cls, txt_file, mu2_file):
