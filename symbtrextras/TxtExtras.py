@@ -130,15 +130,6 @@ class TxtExtras:
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
     @classmethod
-    def _get_usul_variant(cls, data):
-        variant = {}
-        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']
-        for v in vrts:
-            if v['mu2_name'] == data['usul']['mu2_name']:
-                return v
-
-
-    @classmethod
     def correct_offset_gracenote(cls, txt_file, mu2_file):
         # extract symbtr data
         data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
@@ -193,11 +184,25 @@ class TxtExtras:
             warnings.warn("Ends prematurely!")
 
     @classmethod
+    def _get_usul_variant(cls, data):
+        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']][
+            'variants']
+        for v in vrts:
+            if v['mu2_name'] == data['usul']['mu2_name']:
+                return v
+
+        assert False, u'The usul variant {0:s} is not found'.format(
+            data['usul']['mu2_name'])
+
+    @classmethod
     def _get_zaman_mertebe(cls, data):
         for usul in ScoreExtras.usul_dict.values():
             for uv in usul['variants']:
                 if uv['mu2_name'] == data['usul']['mu2_name']:
                     return uv['mertebe'], uv['num_pulses']
+
+        assert False, u'Zaman and mertebe for the usul variant {0:s} is not ' \
+                      u'available'.format(data['usul']['mu2_name'])
 
     @staticmethod
     def to_musicxml(symbtr_name, txt_file, mu2_file):
