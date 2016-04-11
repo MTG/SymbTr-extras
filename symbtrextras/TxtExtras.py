@@ -26,24 +26,32 @@ class TxtExtras:
             row_changed = TxtExtras._change_null_element_to_empty_str(row)
 
             if row['Kod'] == 51:
-                usul_id = row['LNS']
-                usul_name = row['Soz1']
-                if usul_name:  # name given
-                    TxtExtras._chk_usul_by_name(index, mu2_usul_dict, row,
-                                                symbtr_name, usul_id,
-                                                usul_name)
-                elif usul_id:
-                    row_changed = TxtExtras._chk_usul_by_id(
-                        index, inv_mu2_usul_dict, row,
-                        symbtr_name, usul_id, usul_name, row_changed)
-                else:
-                    warnings.warn("Unexpected operation")
+                row_changed = TxtExtras._parse_usul_row(
+                    row, index, mu2_usul_dict, inv_mu2_usul_dict, symbtr_name,
+                    row_changed)
 
-            # reassign
             if row_changed:
                 df.iloc[index] = row
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+
+    @staticmethod
+    def _parse_usul_row(row, index, mu2_usul_dict, inv_mu2_usul_dict,
+                        symbtr_name, row_changed):
+        usul_id = row['LNS']
+        usul_name = row['Soz1']
+        if usul_name:  # name given
+            TxtExtras._chk_usul_by_name(index, mu2_usul_dict, row,
+                                        symbtr_name, usul_id,
+                                        usul_name)
+        elif usul_id:
+            row_changed = TxtExtras._chk_usul_by_id(
+                index, inv_mu2_usul_dict, row,
+                symbtr_name, usul_id, usul_name, row_changed)
+        else:
+            warnings.warn("Unexpected operation")
+
+        return row_changed
 
     @staticmethod
     def _chk_usul_by_name(index, mu2_usul_dict, row, symbtr_name, usul_id,
@@ -101,10 +109,12 @@ class TxtExtras:
         elif attr_str == 'Pay':
             row_str = 'zaman'
         else:
-            raise ValueError('Unexpected usul attribute: %s' % (attr_str))
+            raise ValueError(
+                u'Unexpected usul attribute: {0:s}'.format(attr_str))
         if not usul[attr_str] == row[row_str]:
-            warnings.warn('{0:s}, line {1:s}: {2:s} and {3:s} does not match.'.
-                          format(symbtr_name, str(index), usul_name), attr_str)
+            warnings.warn(u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'
+                          .format(symbtr_name, str(index), usul_name),
+                          attr_str)
 
     @classmethod
     def add_usul_to_first_row(cls, txt_file, mu2_file):
