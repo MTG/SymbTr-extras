@@ -23,48 +23,19 @@ class TxtExtras:
 
         for index, row in df.iterrows():
             # change null to empty string
-            row_changed = False
-            for key, val in row.iteritems():
-                if pd.isnull(val):
-                    row[key] = ''
-                    row_changed = True
+            row_changed = TxtExtras._change_null_element_to_empty_str(row)
 
             if row['Kod'] == 51:
                 usul_id = row['LNS']
                 usul_name = row['Soz1']
                 if usul_name:  # name given
-                    # check if the usul pair matches with the mu2dict
-                    if mu2_usul_dict[usul_name]['id'] == usul_id:
-                        TxtExtras._chk_usul_attr(
-                            row, mu2_usul_dict[usul_name], 'zaman',
-                            symbtr_name, index, usul_name)
-                        TxtExtras._chk_usul_attr(
-                            row, mu2_usul_dict[usul_name], 'mertebe',
-                            symbtr_name, index, usul_name)
-                    else:
-                        warnings.warn(
-                            '{0:s}, line {1:s}: {2:s} and {3:s} does not '
-                            'match.'.format(symbtr_name, str(index),
-                                            usul_name, str(usul_id)))
+                    TxtExtras._chk_usul_by_name(index, mu2_usul_dict, row,
+                                                symbtr_name, usul_id,
+                                                usul_name)
                 elif usul_id:
-                    if usul_id == -1:
-                        warnings.warn(
-                            '{0:s}, line {1:s}: Missing usul info'.format(
-                                symbtr_name, str(index)))
-                    else:
-                        warnings.warn(
-                            '{0:s}, line {1:s}: Filling missing {2:s}'.format(
-                                symbtr_name, str(index),
-                                inv_mu2_usul_dict[usul_id]['mu2_name']))
-                        row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
-                        
-                        TxtExtras._chk_usul_attr(
-                            row, inv_mu2_usul_dict[usul_id], 'zaman',
-                            symbtr_name, index, usul_name)
-                        TxtExtras._chk_usul_attr(
-                            row, inv_mu2_usul_dict[usul_id], 'mertebe',
-                            symbtr_name, index, usul_name)
-                        row_changed = True
+                    row_changed = TxtExtras._chk_usul_by_id(
+                        index, inv_mu2_usul_dict, row,
+                        symbtr_name, usul_id, usul_name, row_changed)
                 else:
                     warnings.warn("Unexpected operation")
 
@@ -73,6 +44,55 @@ class TxtExtras:
                 df.iloc[index] = row
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+
+    @staticmethod
+    def _chk_usul_by_name(index, mu2_usul_dict, row, symbtr_name, usul_id,
+                          usul_name):
+        # check if the usul pair matches with the mu2dict
+        if mu2_usul_dict[usul_name]['id'] == usul_id:
+            TxtExtras._chk_usul_attr(
+                row, mu2_usul_dict[usul_name], 'zaman',
+                symbtr_name, index, usul_name)
+            TxtExtras._chk_usul_attr(
+                row, mu2_usul_dict[usul_name], 'mertebe',
+                symbtr_name, index, usul_name)
+        else:
+            warnings.warn(
+                '{0:s}, line {1:s}: {2:s} and {3:s} does not '
+                'match.'.format(symbtr_name, str(index),
+                                usul_name, str(usul_id)))
+
+    @staticmethod
+    def _chk_usul_by_id(index, inv_mu2_usul_dict, row, symbtr_name, usul_id,
+                        usul_name, row_changed):
+        if usul_id == -1:
+            warnings.warn(
+                '{0:s}, line {1:s}: Missing usul info'.format(
+                    symbtr_name, str(index)))
+        else:
+            warnings.warn(
+                '{0:s}, line {1:s}: Filling missing {2:s}'.format(
+                    symbtr_name, str(index),
+                    inv_mu2_usul_dict[usul_id]['mu2_name']))
+            row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
+
+            TxtExtras._chk_usul_attr(
+                row, inv_mu2_usul_dict[usul_id], 'zaman',
+                symbtr_name, index, usul_name)
+            TxtExtras._chk_usul_attr(
+                row, inv_mu2_usul_dict[usul_id], 'mertebe',
+                symbtr_name, index, usul_name)
+            row_changed = True
+        return row_changed
+
+    @staticmethod
+    def _change_null_element_to_empty_str(row):
+        row_changed = False
+        for key, val in row.iteritems():
+            if pd.isnull(val):
+                row[key] = ''
+                row_changed = True
+        return row_changed
 
     @staticmethod
     def _chk_usul_attr(row, usul, attr_str, symbtr_name, index, usul_name):
