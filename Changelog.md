@@ -1,3 +1,6 @@
+#### SymbTr-extras v0.3.dev
+ - Upgrading to symbtrdataextractor v2.0.0-alpha.5
+
 #### SymbTr-extras v0.2.dev
  - Improved SymbTr MBID matching
 
