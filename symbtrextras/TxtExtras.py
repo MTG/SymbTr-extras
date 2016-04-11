@@ -186,8 +186,8 @@ class TxtExtras:
 
     @classmethod
     def _get_usul_variant(cls, data):
-        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']][
-            'variants']
+        usul_dict = ScoreExtras.get_usul_dict()
+        vrts = usul_dict[data['usul']['symbtr_slug']]['variants']
         for v in vrts:
             if v['mu2_name'] == data['usul']['mu2_name']:
                 return v
@@ -197,7 +197,8 @@ class TxtExtras:
 
     @classmethod
     def _get_zaman_mertebe(cls, data):
-        for usul in ScoreExtras.usul_dict.values():
+        usul_dict = ScoreExtras.get_usul_dict()
+        for usul in usul_dict.values():
             for uv in usul['variants']:
                 if uv['mu2_name'] == data['usul']['mu2_name']:
                     return uv['mertebe'], uv['num_pulses']

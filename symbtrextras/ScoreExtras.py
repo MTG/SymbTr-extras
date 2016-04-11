@@ -37,9 +37,12 @@ class ScoreExtras:
     _iconv_map = {'utf-16le': 'UTF-16',
                   'Little-endian UTF-16 Unicode': 'UTF-16',
                   'iso-8859-1': 'ISO_8859-9', 'ISO-8859': 'ISO_8859-9'}
-    usul_dict = json.load(open(  # usul dictionary
-        os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                     'data', 'usul_extended.json'), 'r'))
+
+    @ staticmethod
+    def get_usul_dict():
+        return json.load(open(  # usul dictionary
+            os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         'data', 'usul_extended.json'), 'r'))
 
     def __init__(self):
         pass
@@ -65,7 +68,8 @@ class ScoreExtras:
     def parse_usul_dict(cls):
         mu2_usul_dict = {}
         inv_mu2_usul_dict = {}
-        for key, val in cls.usul_dict.iteritems():
+        usul_dict = cls.get_usul_dict()
+        for key, val in usul_dict.iteritems():
             for vrt in val['variants']:
                 if vrt['mu2_name']:  # if it doesn't have a mu2 name, the usul
                     # is not in symbtr collection
