@@ -90,14 +90,7 @@ class TxtExtras:
         data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
 
         # get usul variant
-        variant = {}
-        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']
-        for v in vrts:
-            if v['mu2_name'] == data['usul']['mu2_name']:
-                variant = v
-                break
-
-        # read the txt score
+        variant = cls._get_usul_variant(data)# read the txt score
         df = pd.read_csv(txt_file, sep='\t')
 
         # create the usul row
@@ -137,17 +130,21 @@ class TxtExtras:
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
     @classmethod
+    def _get_usul_variant(cls, data):
+        variant = {}
+        vrts = ScoreExtras.usul_dict[data['usul']['symbtr_slug']]['variants']
+        for v in vrts:
+            if v['mu2_name'] == data['usul']['mu2_name']:
+                return v
+
+
+    @classmethod
     def correct_offset_gracenote(cls, txt_file, mu2_file):
         # extract symbtr data
         data = ScoreExtras.get_symbtr_data(txt_file, mu2_file)
 
         # get zaman and mertebe from usul variant
-        for usul in ScoreExtras.usul_dict.values():
-            for uv in usul['variants']:
-                if uv['mu2_name'] == data['usul']['mu2_name']:
-                    mertebe = uv['mertebe']
-                    zaman = uv['num_pulses']
-                    break
+        mertebe, zaman = cls._get_zaman_mertebe(data)
 
         # correct the offsets and the gracenote durations
         df = pd.read_csv(txt_file, sep='\t')
@@ -188,6 +185,17 @@ class TxtExtras:
             warnings.warn("Ends prematurely!")
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+
+    @classmethod
+    def _get_zaman_mertebe(cls, data):
+        for usul in ScoreExtras.usul_dict.values():
+            for uv in usul['variants']:
+                if uv['mu2_name'] == data['usul']['mu2_name']:
+                    mertebe = uv['mertebe']
+                    zaman = uv['num_pulses']
+                    break
+
+        return mertebe, zaman
 
     @staticmethod
     def to_musicxml(symbtr_name, txt_file, mu2_file):
