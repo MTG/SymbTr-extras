@@ -30,19 +30,21 @@ class ScoreExtras:
                 warnings.warn("symbtr_mbid.json is not found in the local "
                               "search path. Using the back-up "
                               "symbtr_mbid.json included in this repository.")
-                return json.load(open(  # load symbTr mbids
-                    os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                 'data', 'symbTr_mbid.json'), 'r'))
+                return ScoreExtras.load_local_json('symbTr_mbid.json')
+
+    @staticmethod
+    def get_usul_dict():
+        ScoreExtras.load_local_json('usul_extended.json')
+
+    @staticmethod
+    def load_local_json(json_name):
+        return json.load(open(  # load symbTr mbids
+            os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         'data', json_name), 'r'))
 
     _iconv_map = {'utf-16le': 'UTF-16',
                   'Little-endian UTF-16 Unicode': 'UTF-16',
                   'iso-8859-1': 'ISO_8859-9', 'ISO-8859': 'ISO_8859-9'}
-
-    @ staticmethod
-    def get_usul_dict():
-        return json.load(open(  # usul dictionary
-            os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                         'data', 'usul_extended.json'), 'r'))
 
     def __init__(self):
         pass
