@@ -34,7 +34,7 @@ class ScoreExtras:
 
     @staticmethod
     def get_usul_dict():
-        ScoreExtras.load_local_json('usul_extended.json')
+        return ScoreExtras.load_local_json('usul_extended.json')
 
     @staticmethod
     def load_local_json(json_name):
