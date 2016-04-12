@@ -21,11 +21,13 @@ before_install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
+  - conda install -c conda conda-env
   # Useful for debugging any issues with conda
   - conda info -a
 
 install:
-  - conda create -f conda_environment.yml python=$TRAVIS_PYTHON_VERSION
+  - conda env create python=$TRAVIS_PYTHON_VERSION
+  #- conda create -f environment.yml python=$TRAVIS_PYTHON_VERSION
   #- conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas lxml networkx
   - source activate test_environment
   - python setup.py install
