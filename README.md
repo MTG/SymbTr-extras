@@ -22,14 +22,14 @@ If you want to install the package, it is recommended to install it and all the 
     source env/bin/activate
     python setup.py install
 
-The requirements are installed during the setup. If that step does not work for some reason, you can install the requirements by calling:
-
-    pip install -r requirements
-
 If you want to be able to edit files and have the changes be reflected, then
 install the repository like this instead:
 
     pip install -e .
+
+Now you can install the rest of the dependencies:
+
+    pip install -r requirements
 
 Authors
 -------
