@@ -9,7 +9,7 @@ import filecmp
 _curr_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-def test_with_missing_first_row():
+def test_with_missing_first_row_usul_name_index_jumps():
     run_all_extras('sedaraban--sazsemaisi--aksaksemai----tanburi_cemil_bey')
 
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from musicxmlconverter.symbtr2musicxml import SymbTrScore
+from fileoperations.slugify_tr import slugify_tr
 from ScoreExtras import ScoreExtras
 import pandas as pd
 import os
@@ -9,9 +10,6 @@ import warnings
 class TxtExtras:
     symbtr_cols = ['Sira', 'Kod', 'Nota53', 'NotaAE', 'Koma53', 'KomaAE',
                    'Pay', 'Payda', 'Ms', 'LNS', 'Bas', 'Soz1', 'Offset']
-
-    def __init__(self):
-        pass
 
     @classmethod
     def check_usul_row(cls, txt_file):
@@ -48,7 +46,7 @@ class TxtExtras:
                 index, inv_mu2_usul_dict, row,
                 symbtr_name, usul_id, usul_name, row_changed)
         else:
-            warnings.warn("Unexpected operation")
+            raise RuntimeError("Unexpected operation")
 
         return row_changed
 
@@ -63,22 +61,21 @@ class TxtExtras:
                                symbtr_name, index, usul_name)
         else:
             warnings.warn(
-                '{0:s}, line {1:s}: {2:s} and {3:s} does not '
-                'match.'.format(symbtr_name, str(index),
-                                usul_name, str(usul_id)))
+                u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'.format(
+                    symbtr_name, str(index), usul_name, str(usul_id)))
 
     @classmethod
     def _chk_usul_by_id(cls, index, inv_mu2_usul_dict, row, symbtr_name,
                         usul_id, usul_name, row_changed):
         if usul_id == -1:
             warnings.warn(
-                '{0:s}, line {1:s}: Missing usul info'.format(
+                u'{0:s}, line {1:s}: Missing usul info'.format(
                     symbtr_name, str(index)))
         else:
-            warnings.warn(
-                '{0:s}, line {1:s}: Filling missing {2:s}'.format(
-                    symbtr_name, str(index),
-                    inv_mu2_usul_dict[usul_id]['mu2_name']))
+            warnstr = u'{0:s}, line {1:d}: Filling missing {2:s}'.format(
+                symbtr_name, index,
+                slugify_tr(inv_mu2_usul_dict[usul_id]['mu2_name']))
+            warnings.warn(warnstr)
             row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
 
             cls._chk_usul_attr(row, inv_mu2_usul_dict[usul_id], 'zaman',
