@@ -104,17 +104,17 @@ class TxtExtras:
 
     @staticmethod
     def _chk_usul_attr(row, usul, attr_str, symbtr_name, index, usul_name):
-        if attr_str == 'Payda':
-            row_str = 'mertebe'
-        elif attr_str == 'Pay':
-            row_str = 'zaman'
+        if attr_str == 'mertebe':
+            row_str = 'Payda'
+        elif attr_str == 'zaman':
+            row_str = 'Pay'
         else:
             raise ValueError(
                 u'Unexpected usul attribute: {0:s}'.format(attr_str))
         if not usul[attr_str] == row[row_str]:
             warnings.warn(u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'
-                          .format(symbtr_name, str(index), usul_name),
-                          attr_str)
+                          .format(symbtr_name, str(index), usul_name,
+                                  attr_str))
 
     @classmethod
     def add_usul_to_first_row(cls, txt_file, mu2_file):
