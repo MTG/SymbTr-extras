@@ -26,8 +26,8 @@ before_install:
   - conda info -a
 
 install:
-  - conda env create python=$TRAVIS_PYTHON_VERSION
-  #- conda create -f environment.yml python=$TRAVIS_PYTHON_VERSION
+  #- conda env create python=$TRAVIS_PYTHON_VERSION
+  - conda create -f symbtrextras/unittests/environment.yml python=$TRAVIS_PYTHON_VERSION
   #- conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas lxml networkx
   - source activate test_environment
   - python setup.py install
