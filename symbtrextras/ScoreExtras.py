@@ -4,10 +4,8 @@ import urllib
 import os
 import subprocess
 import warnings
-import fileoperations
-import symbtrdataextractor
-from symbtrdataextractor.reader.Mu2Reader import Mu2Reader
 from symbtrdataextractor.SymbTrDataExtractor import SymbTrDataExtractor
+from symbtrdataextractor.reader.Mu2Reader import Mu2Reader
 
 
 class ScoreExtras:
