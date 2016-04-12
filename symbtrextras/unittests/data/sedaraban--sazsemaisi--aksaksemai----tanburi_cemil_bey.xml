@@ -9485,6 +9485,10 @@
           <beats>6</beats>
           <beat-type>8</beat-type>
         </time>
+        <time>
+          <beats>12345</beats>
+          <beat-type>999</beat-type>
+        </time>
       </attributes>
       <note>
         <!--symbtr_txt_note_index 719-->
@@ -9564,8 +9568,20 @@
         </direction-type>
         <sound tempo="66"/>
       </direction>
+      <direction placement="above">
+        <direction-type>
+          <metronome>
+            <beat-unit>quarter</beat-unit>
+            <per-minute>66</per-minute>
+          </metronome>
+        </direction-type>
+        <direction-type>
+          <words default-y="35">Usul: Aksaksemâî</words>
+        </direction-type>
+        <sound tempo="66"/>
+      </direction>
       <note>
-        <!--symbtr_txt_note_index 725-->
+        <!--symbtr_txt_note_index 726-->
         <pitch>
           <step>F</step>
           <alter>+1</alter>
@@ -9579,7 +9595,7 @@
         </lyric>
       </note>
       <note>
-        <!--symbtr_txt_note_index 726-->
+        <!--symbtr_txt_note_index 727-->
         <grace steal-time-following="10"/>
         <pitch>
           <step>E</step>
@@ -9590,7 +9606,7 @@
         </lyric>
       </note>
       <note>
-        <!--symbtr_txt_note_index 727-->
+        <!--symbtr_txt_note_index 728-->
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -9602,9 +9618,6 @@
           <text></text>
         </lyric>
       </note>
-    </measure>
-    <measure number="94-0">
-      <attributes/>
     </measure>
   </part>
 </score-partwise>
