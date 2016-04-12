@@ -9,7 +9,7 @@ import filecmp
 _curr_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-def test_with_missing_first_row_usul_name_index_jumps():
+def test_wrong_score():
     run_all_extras('sedaraban--sazsemaisi--aksaksemai----tanburi_cemil_bey')
 
 
@@ -59,7 +59,6 @@ def run_all_extras(symbtr_name):
         # check txt
         txt_corrected = os.path.join(_curr_folder, 'data', symbtr_name +
                                      '--corrected.txt')
-
         assert filecmp.cmp(txt_temp, txt_corrected),\
             'Fault in txt-extras: {0:s}'.format(symbtr_name)
 
