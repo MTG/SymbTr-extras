@@ -31,4 +31,5 @@ setup(name='symbtrextras',
       install_requires=[
           "pandas==0.18.0",
       ],
+      cmdclass={'install': CustomInstall},
       )
