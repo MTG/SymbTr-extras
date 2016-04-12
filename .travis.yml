@@ -6,14 +6,20 @@ python:
 #  - "3.4"
 #  - "3.5"
 
-# command before installation
-before_install:
-  - pip install codecov
+before_install:  # we are going to installpandas and lxml from conda
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda update --yes conda
 
-# command to install dependencies
 install:
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION pandas lxml
+  - python setup.py install
+  # install remaining from pip
   - pip install -r requirements
   - pip install flake8
+  - pip install codecov
 
 # command to run before the tests
 before_script:
