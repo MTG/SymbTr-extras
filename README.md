@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MTG/SymbTr-extras.svg?branch=master)](https://travis-ci.org/MTG/SymbTr-extras) [![Code Climate](https://codeclimate.com/github/MTG/SymbTr-extras/badges/gpa.svg)](https://codeclimate.com/github/MTG/SymbTr-extras)
+[![Build Status](https://travis-ci.org/MTG/SymbTr-extras.svg?branch=master)](https://travis-ci.org/MTG/SymbTr-extras) [![Code Climate](https://codeclimate.com/github/MTG/SymbTr-extras/badges/gpa.svg)](https://codeclimate.com/github/MTG/SymbTr-extras) [![codecov.io](https://codecov.io/github/MTG/SymbTr-extras/coverage.svg?branch=master)](https://codecov.io/github/MTG/SymbTr-extras?branch=master)
 
 SymbTr-extras
 ===========
@@ -22,14 +22,14 @@ If you want to install the package, it is recommended to install it and all the 
     source env/bin/activate
     python setup.py install
 
+The requirements are installed during the setup. If that step does not work for some reason, you can install the requirements by calling:
+
+    pip install -r requirements
+
 If you want to be able to edit files and have the changes be reflected, then
 install the repository like this instead:
 
     pip install -e .
-
-Now you can install the rest of the dependencies:
-
-    pip install -r requirements
 
 Authors
 -------
