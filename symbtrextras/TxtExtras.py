@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from musicxmlconverter.symbtr2musicxml import SymbTrScore
-from fileoperations.slugify_tr import slugify_tr
 from ScoreExtras import ScoreExtras
 import pandas as pd
 import os
@@ -54,28 +53,27 @@ class TxtExtras:
     def _chk_usul_by_name(cls, index, mu2_usul_dict, row, symbtr_name, usul_id,
                           usul_name):
         # check if the usul pair matches with the mu2dict
-        if mu2_usul_dict[usul_name]['id'] == usul_id:
+        if usul_name in mu2_usul_dict and mu2_usul_dict[usul_name]['id'] == \
+                usul_id:
             cls._chk_usul_attr(row, mu2_usul_dict[usul_name], 'zaman',
                                symbtr_name, index, usul_name)
             cls._chk_usul_attr(row, mu2_usul_dict[usul_name], 'mertebe',
                                symbtr_name, index, usul_name)
         else:
-            warnings.warn(
-                u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'.format(
-                    symbtr_name, str(index), usul_name, str(usul_id)))
+            warnstr = u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'.\
+                format(symbtr_name, str(index), usul_name, str(usul_id))
+            warnings.warn(warnstr.encode('utf-8'))
 
     @classmethod
     def _chk_usul_by_id(cls, index, inv_mu2_usul_dict, row, symbtr_name,
                         usul_id, usul_name, row_changed):
         if usul_id == -1:
-            warnings.warn(
-                u'{0:s}, line {1:s}: Missing usul info'.format(
-                    symbtr_name, str(index)))
+            warnings.warn(u'{0:s}, line {1:s}: Missing usul info'.format(
+                symbtr_name, str(index)).encode('utf-8'))
         else:
             warnstr = u'{0:s}, line {1:d}: Filling missing {2:s}'.format(
-                symbtr_name, index,
-                slugify_tr(inv_mu2_usul_dict[usul_id]['mu2_name']))
-            warnings.warn(warnstr)
+                symbtr_name, index, inv_mu2_usul_dict[usul_id]['mu2_name'])
+            warnings.warn(warnstr.encode('utf-8'))
             row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
 
             cls._chk_usul_attr(row, inv_mu2_usul_dict[usul_id], 'zaman',
@@ -104,9 +102,9 @@ class TxtExtras:
             raise ValueError(
                 u'Unexpected usul attribute: {0:s}'.format(attr_str))
         if not usul[attr_str] == row[row_str]:
-            warnings.warn(u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'
-                          .format(symbtr_name, str(index), usul_name,
-                                  attr_str))
+            warnstr = u'{0:s}, line {1:s}: {2:s} and {3:s} does not match.'\
+                .format(symbtr_name, str(index), usul_name, attr_str)
+            warnings.warn(warnstr.encode('utf-8'))
 
     @classmethod
     def add_usul_to_first_row(cls, txt_file, mu2_file):
@@ -142,13 +140,13 @@ class TxtExtras:
                 [usul_row, df], ignore_index=True)[cls.symbtr_cols]
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
-                print(data['symbtr'] + " starts with a different usul row. "
-                                       "Correcting...")
+                print(u"{0:s} starts with a different usul row. Correcting...".
+                    format(data['symbtr']).encode('utf-8'))
                 df_usul = pd.concat(
                     [usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
             else:
-                print(data['symbtr'] + " starts with the usul row. "
-                                       "Skipping...")
+                print(u"{0:s} starts with the usul row. Skipping...".format(
+                    data['symbtr']).encode('utf-8'))
                 df_usul = df
 
         return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')

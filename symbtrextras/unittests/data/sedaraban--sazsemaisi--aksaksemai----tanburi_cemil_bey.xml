@@ -5707,7 +5707,7 @@
           </metronome>
         </direction-type>
         <direction-type>
-          <words default-y="35">Usul: Yürüksemâî Ii</words>
+          <words default-y="35">Usul: Wronğ Usul</words>
         </direction-type>
         <sound tempo="271"/>
       </direction>
@@ -9587,42 +9587,6 @@
           <text></text>
         </lyric>
       </note>
-      <note>
-        <!--symbtr_txt_note_index 727-->
-        <pitch>
-          <step>D</step>
-          <octave>4</octave>
-        </pitch>
-        <duration>24</duration>
-        <type>16th</type>
-        <lyric>
-          <text></text>
-        </lyric>
-      </note>
-      <note>
-        <!--symbtr_txt_note_index 728-->
-        <pitch>
-          <step>D</step>
-          <octave>4</octave>
-        </pitch>
-        <duration>96</duration>
-        <type>quarter</type>
-        <lyric>
-          <text></text>
-        </lyric>
-      </note>
-      <note>
-        <!--symbtr_txt_note_index 729-->
-        <rest/>
-        <duration>48</duration>
-        <type>eighth</type>
-        <lyric>
-          <text></text>
-        </lyric>
-      </note>
-    </measure>
-    <measure number="94-0">
-      <attributes/>
     </measure>
   </part>
 </score-partwise>
