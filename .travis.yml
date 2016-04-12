@@ -6,8 +6,12 @@ python:
 #  - "3.4"
 #  - "3.5"
 
-# conda setup
+
 before_install:
+  # flake 8
+  - pip install flake8
+  - "flake8 symbtrextras --ignore=E501"
+  # conda setup
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
   #- if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
@@ -25,16 +29,11 @@ before_install:
   # Useful for debugging any issues with conda
   #- conda info -a
 
-flake8:
-  - pip install flake8
-  - "flake8 symbtrextras --ignore=E501"
-
 install:
   #- conda env create python=$TRAVIS_PYTHON_VERSION
   #- conda create -f symbtrextras/unittests/environment.yml python=$TRAVIS_PYTHON_VERSION
   #- conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas lxml networkx
   #- source activate test_environment
-
   # install remaining from pip
   - pip install -r requirements
   - pip install codecov

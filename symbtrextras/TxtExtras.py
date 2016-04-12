@@ -141,7 +141,7 @@ class TxtExtras:
         else:
             if not df.iloc[0]["LNS"] == usul_row.iloc[0]["LNS"]:
                 print(u"{0:s} starts with a different usul row. Correcting...".
-                    format(data['symbtr']).encode('utf-8'))
+                      format(data['symbtr']).encode('utf-8'))
                 df_usul = pd.concat(
                     [usul_row, df.ix[1:]], ignore_index=True)[cls.symbtr_cols]
             else:
