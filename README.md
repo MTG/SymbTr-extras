@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/MTG/SymbTr-extras.svg?branch=master)](https://travis-ci.org/MTG/SymbTr-extras) [![Code Climate](https://codeclimate.com/github/MTG/SymbTr-extras/badges/gpa.svg)](https://codeclimate.com/github/MTG/SymbTr-extras)
+
 SymbTr-extras
 ===========
 Basic tools to manipulate the SymbTr-scores 
