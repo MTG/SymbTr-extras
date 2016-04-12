@@ -25,6 +25,10 @@ before_install:
   # Useful for debugging any issues with conda
   #- conda info -a
 
+flake8:
+  - pip install flake8
+  - "flake8 symbtrextras --ignore=E501"
+
 install:
   #- conda env create python=$TRAVIS_PYTHON_VERSION
   #- conda create -f symbtrextras/unittests/environment.yml python=$TRAVIS_PYTHON_VERSION
@@ -33,12 +37,11 @@ install:
 
   # install remaining from pip
   - pip install -r requirements
-  - pip install flake8
   - pip install codecov
 
 # command to run before the tests
-before_script:
-  - "flake8 symbtrextras --ignore=E501"
+# before_script:
+#   - "flake8 symbtrextras --ignore=E501"
 
 # command to run tests
 script:
