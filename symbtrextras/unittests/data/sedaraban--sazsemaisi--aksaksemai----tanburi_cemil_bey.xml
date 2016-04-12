@@ -9563,13 +9563,11 @@
       </note>
       <note>
         <!--symbtr_txt_note_index 725-->
+        <grace steal-time-following="10"/>
         <pitch>
           <step>E</step>
           <octave>4</octave>
         </pitch>
-        <duration>24</duration>
-        <type>16th</type>
-        <accidental>slash-flat</accidental>
         <lyric>
           <text></text>
         </lyric>

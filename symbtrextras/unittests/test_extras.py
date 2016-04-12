@@ -59,12 +59,16 @@ def run_all_extras(symbtr_name):
         # check txt
         txt_corrected = os.path.join(_curr_folder, 'data', symbtr_name +
                                      '--corrected.txt')
+
         assert filecmp.cmp(txt_temp, txt_corrected),\
             'Fault in txt-extras: {0:s}'.format(symbtr_name)
 
         # Convert the txt file to MusicXML using the additional metadata from
         # mu2 files (and the MusicBrainz mbid)
         symbtr_xml = TxtExtras.to_musicxml(symbtr_name, txt_temp, mu2_temp)
+
+        # with open(xml_file, 'w') as xml_file:
+        #     xml_file.write(symbtr_xml)
 
         with open(xml_file, 'r') as xml_file:
             saved_xml = xml_file.read()

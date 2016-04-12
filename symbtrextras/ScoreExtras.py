@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import json
 import urllib
 import os
 import subprocess
 import warnings
+from future.utils import iteritems
 from symbtrdataextractor.SymbTrDataExtractor import SymbTrDataExtractor
 from symbtrdataextractor.reader.Mu2Reader import Mu2Reader
 
@@ -71,7 +73,7 @@ class ScoreExtras:
         mu2_usul_dict = {}
         inv_mu2_usul_dict = {}
         usul_dict = cls.get_usul_dict()
-        for key, val in usul_dict.iteritems():
+        for key, val in iteritems(usul_dict):
             for vrt in val['variants']:
                 if vrt['mu2_name']:  # if it doesn't have a mu2 name, the usul
                     # is not in symbtr collection

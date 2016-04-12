@@ -4,3 +4,4 @@ git+https://github.com/sertansenturk/makammusicbrainz.git@v1.2.2#egg=makammusicb
 git+https://github.com/alastair/python-musicbrainzngs.git@v0.6#egg=musicbrainzngs
 git+https://github.com/sertansenturk/fileoperations_python.git@v1.1#egg=fileoperations-python
 pandas==0.18.0
+future

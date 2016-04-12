@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from musicxmlconverter.symbtr2musicxml import SymbTrScore
 from ScoreExtras import ScoreExtras
 import pandas as pd
 import os
 import warnings
+from future.utils import iteritems
 
 
 class TxtExtras:
@@ -30,7 +32,7 @@ class TxtExtras:
             if row_changed:
                 df.iloc[index] = row
 
-        return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+        return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @classmethod
     def _parse_usul_row(cls, row, index, mu2_usul_dict, inv_mu2_usul_dict,
@@ -113,7 +115,7 @@ class TxtExtras:
 
         # get usul variant
         variant = cls._get_usul_variant(data)  # read the txt score
-        df = pd.read_csv(txt_file, sep='\t')
+        df = pd.read_csv(txt_file, sep=b'\t')
 
         # create the usul row
         # 1    51            0    0    zaman    mertebe    0    usul_symbtr_internal_id    0    usul_mu2_name    0
@@ -149,7 +151,7 @@ class TxtExtras:
                     data['symbtr']).encode('utf-8'))
                 df_usul = df
 
-        return df_usul.to_csv(None, sep='\t', index=False, encoding='utf-8')
+        return df_usul.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @classmethod
     def correct_offset_gracenote(cls, txt_file, mu2_file):
@@ -160,7 +162,7 @@ class TxtExtras:
         mertebe, zaman = cls._get_zaman_mertebe(data)
 
         # correct the offsets and the gracenote durations
-        df = pd.read_csv(txt_file, sep='\t')
+        df = pd.read_csv(txt_file, sep=b'\t')
         row = dict()
         for index, row in df.iterrows():
             # recompute the erroneous gracenotes with non-zero duration
@@ -196,7 +198,7 @@ class TxtExtras:
 
         cls._check_premature_ending(row)
 
-        return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
+        return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @staticmethod
     def _check_premature_ending(row):
@@ -239,6 +241,6 @@ class TxtExtras:
     @staticmethod
     def _change_null_to_empty_str(row):
         # change null to empty string
-        for key, val in row.iteritems():
+        for key, val in iteritems(row):
             if pd.isnull(val):
                 row[key] = ''

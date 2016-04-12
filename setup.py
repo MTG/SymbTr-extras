@@ -14,5 +14,6 @@ setup(name='symbtrextras',
       include_package_data=True,
       install_requires=[
           "pandas==0.18.0",
+          "future"
       ],
       )
