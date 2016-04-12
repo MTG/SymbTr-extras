@@ -13,8 +13,8 @@ class TxtExtras:
     def __init__(self):
         pass
 
-    @staticmethod
-    def check_usul_row(txt_file):
+    @classmethod
+    def check_usul_row(cls, txt_file):
         mu2_usul_dict, inv_mu2_usul_dict = ScoreExtras.parse_usul_dict()
 
         df = pd.read_csv(txt_file, sep='\t', encoding='utf-8')
@@ -23,10 +23,10 @@ class TxtExtras:
 
         for index, row in df.iterrows():
             # change null to empty string
-            row_changed = TxtExtras._change_null_element_to_empty_str(row)
+            row_changed = cls._change_null_element_to_empty_str(row)
 
             if row['Kod'] == 51:
-                row_changed = TxtExtras._parse_usul_row(
+                row_changed = cls._parse_usul_row(
                     row, index, mu2_usul_dict, inv_mu2_usul_dict, symbtr_name,
                     row_changed)
 
@@ -35,17 +35,16 @@ class TxtExtras:
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
-    @staticmethod
-    def _parse_usul_row(row, index, mu2_usul_dict, inv_mu2_usul_dict,
+    @classmethod
+    def _parse_usul_row(cls, row, index, mu2_usul_dict, inv_mu2_usul_dict,
                         symbtr_name, row_changed):
         usul_id = row['LNS']
         usul_name = row['Soz1']
         if usul_name:  # name given
-            TxtExtras._chk_usul_by_name(index, mu2_usul_dict, row,
-                                        symbtr_name, usul_id,
-                                        usul_name)
+            cls._chk_usul_by_name(index, mu2_usul_dict, row, symbtr_name,
+                                  usul_id, usul_name)
         elif usul_id:
-            row_changed = TxtExtras._chk_usul_by_id(
+            row_changed = cls._chk_usul_by_id(
                 index, inv_mu2_usul_dict, row,
                 symbtr_name, usul_id, usul_name, row_changed)
         else:
@@ -53,26 +52,24 @@ class TxtExtras:
 
         return row_changed
 
-    @staticmethod
-    def _chk_usul_by_name(index, mu2_usul_dict, row, symbtr_name, usul_id,
+    @classmethod
+    def _chk_usul_by_name(cls, index, mu2_usul_dict, row, symbtr_name, usul_id,
                           usul_name):
         # check if the usul pair matches with the mu2dict
         if mu2_usul_dict[usul_name]['id'] == usul_id:
-            TxtExtras._chk_usul_attr(
-                row, mu2_usul_dict[usul_name], 'zaman',
-                symbtr_name, index, usul_name)
-            TxtExtras._chk_usul_attr(
-                row, mu2_usul_dict[usul_name], 'mertebe',
-                symbtr_name, index, usul_name)
+            cls._chk_usul_attr(row, mu2_usul_dict[usul_name], 'zaman',
+                               symbtr_name, index, usul_name)
+            cls._chk_usul_attr(row, mu2_usul_dict[usul_name], 'mertebe',
+                               symbtr_name, index, usul_name)
         else:
             warnings.warn(
                 '{0:s}, line {1:s}: {2:s} and {3:s} does not '
                 'match.'.format(symbtr_name, str(index),
                                 usul_name, str(usul_id)))
 
-    @staticmethod
-    def _chk_usul_by_id(index, inv_mu2_usul_dict, row, symbtr_name, usul_id,
-                        usul_name, row_changed):
+    @classmethod
+    def _chk_usul_by_id(cls, index, inv_mu2_usul_dict, row, symbtr_name,
+                        usul_id, usul_name, row_changed):
         if usul_id == -1:
             warnings.warn(
                 '{0:s}, line {1:s}: Missing usul info'.format(
@@ -84,12 +81,10 @@ class TxtExtras:
                     inv_mu2_usul_dict[usul_id]['mu2_name']))
             row['Soz1'] = inv_mu2_usul_dict[usul_id]['mu2_name']
 
-            TxtExtras._chk_usul_attr(
-                row, inv_mu2_usul_dict[usul_id], 'zaman',
-                symbtr_name, index, usul_name)
-            TxtExtras._chk_usul_attr(
-                row, inv_mu2_usul_dict[usul_id], 'mertebe',
-                symbtr_name, index, usul_name)
+            cls._chk_usul_attr(row, inv_mu2_usul_dict[usul_id], 'zaman',
+                               symbtr_name, index, usul_name)
+            cls._chk_usul_attr(row, inv_mu2_usul_dict[usul_id], 'mertebe',
+                               symbtr_name, index, usul_name)
             row_changed = True
         return row_changed
 
@@ -208,15 +203,15 @@ class TxtExtras:
 
         return df.to_csv(None, sep='\t', index=False, encoding='utf-8')
 
-    @classmethod
-    def _check_premature_ending(cls, row):
+    @staticmethod
+    def _check_premature_ending(row):
         # warn if the last measure end prematurely, i.e. the last note does not
         # have an integer offset
         if not (round(row['Offset'] * 10000) * 0.0001).is_integer():
             warnings.warn("Ends prematurely!")
 
-    @classmethod
-    def _get_usul_variant(cls, data):
+    @staticmethod
+    def _get_usul_variant(data):
         usul_dict = ScoreExtras.get_usul_dict()
         vrts = usul_dict[data['usul']['symbtr_slug']]['variants']
         for v in vrts:
@@ -226,8 +221,8 @@ class TxtExtras:
         assert False, u'The usul variant {0:s} is not found'.format(
             data['usul']['mu2_name'])
 
-    @classmethod
-    def _get_zaman_mertebe(cls, data):
+    @staticmethod
+    def _get_zaman_mertebe(data):
         usul_dict = ScoreExtras.get_usul_dict()
         for usul in usul_dict.values():
             for uv in usul['variants']:

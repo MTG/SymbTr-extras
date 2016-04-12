@@ -58,10 +58,10 @@ class ScoreExtras:
 
         return extractor.merge(txt_data, mu2_header, verbose=False)
 
-    @staticmethod
-    def get_mbids(symbtr_name):
+    @classmethod
+    def get_mbids(cls, symbtr_name):
         mbids = []  # extremely rare but there can be more than one mbid
-        for e in ScoreExtras._read_symbtr_mbid():
+        for e in cls._read_symbtr_mbid():
             if e['name'] == symbtr_name:
                 mbids.append(e['uuid'])
         return mbids
