@@ -76,7 +76,8 @@ class ScoreExtras:
                     # is not in symbtr collection
                     zaman = int(vrt['num_pulses']) if vrt['num_pulses'] else []
                     mertebe = int(vrt['mertebe']) if vrt['mertebe'] else []
-                    if vrt['mu2_name'] == '(Serbest)':
+                    if vrt['mu2_name'] in ['(Serbest)', '[Serbest]',
+                                           'Serbest']:
                         zaman = 0
                         mertebe = 0
                     mu2_usul_dict[vrt['mu2_name']] = {
