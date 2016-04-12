@@ -9564,7 +9564,7 @@
           </metronome>
         </direction-type>
         <direction-type>
-          <words default-y="35">Usul: Unknown Usul</words>
+          <words default-y="35"/>
         </direction-type>
         <sound tempo="66"/>
       </direction>
