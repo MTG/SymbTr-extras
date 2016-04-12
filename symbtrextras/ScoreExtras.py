@@ -48,9 +48,6 @@ class ScoreExtras:
                   'Little-endian UTF-16 Unicode': 'UTF-16',
                   'iso-8859-1': 'ISO_8859-9', 'ISO-8859': 'ISO_8859-9'}
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def get_symbtr_data(txt_file, mu2_file):
         extractor = SymbTrDataExtractor()
