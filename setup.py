@@ -1,22 +1,6 @@
 #!/usr/bin/env python
-import subprocess
-try:
-    from setuptools import setup
-    from setuptools import find_packages
-    from setuptools.command.install import install as _install
-except ImportError:
-    from distutils.core import setup
-    from setuptools import find_packages  # no replacement in distutils
-    from distutils.command.install import install as _install
-
-
-class CustomInstall(_install):
-    def run(self):
-        # install package
-        _install.run(self)
-
-        # install requirements
-        subprocess.call(["pip install -Ur requirements"], shell=True)
+from setuptools import setup
+from setuptools import find_packages
 
 
 setup(name='symbtrextras',
@@ -31,5 +15,4 @@ setup(name='symbtrextras',
       install_requires=[
           "pandas==0.18.0",
       ],
-      cmdclass={'install': CustomInstall},
       )

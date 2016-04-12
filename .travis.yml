@@ -25,11 +25,11 @@ before_install:
   - conda info -a
 
 install:
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas lxml networkx
-  - source activate test-environment
+  - conda create -f conda_environment.yml python=$TRAVIS_PYTHON_VERSION
+  #- conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas lxml networkx
+  - source activate test_environment
   - python setup.py install
   # install remaining from pip
-  - python setup.py install
   - pip install flake8
   - pip install codecov
 
