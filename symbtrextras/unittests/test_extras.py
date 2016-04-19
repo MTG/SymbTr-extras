@@ -1,6 +1,6 @@
 import os
-from symbtrextras.ScoreExtras import ScoreExtras
-from symbtrextras.TxtExtras import TxtExtras
+from symbtrextras.scoreextras import ScoreExtras
+from symbtrextras.txtextras import TxtExtras
 import tempfile
 import shutil
 import filecmp

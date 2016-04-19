@@ -6,8 +6,8 @@ import os
 import subprocess
 import warnings
 from future.utils import iteritems
-from symbtrdataextractor.SymbTrDataExtractor import SymbTrDataExtractor
-from symbtrdataextractor.reader.Mu2Reader import Mu2Reader
+from symbtrdataextractor.dataextractor import DataExtractor
+from symbtrdataextractor.reader.mu2 import Mu2Reader
 
 
 class ScoreExtras:
@@ -50,7 +50,7 @@ class ScoreExtras:
 
     @staticmethod
     def get_symbtr_data(txt_file, mu2_file):
-        extractor = SymbTrDataExtractor()
+        extractor = DataExtractor()
         txt_data = extractor.extract(txt_file)[0]
 
         mu2_header = Mu2Reader.read_header(mu2_file)[0]
