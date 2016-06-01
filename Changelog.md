@@ -1,3 +1,6 @@
+#### SymbTr-extras v0.3.1
+ - Updated required packages
+
 #### SymbTr-extras v0.3.0
  - Improved code quality
  - Added unittests

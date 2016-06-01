@@ -1,7 +1,7 @@
-git+https://github.com/sertansenturk/symbtrdataextractor.git@v2.0.0#egg=symbtrdataextractor
-git+https://github.com/burakuyar/MusicXMLConverter.git@v1.2.0#egg=musicxmlconverter
-git+https://github.com/sertansenturk/makammusicbrainz.git@v1.2.2#egg=makammusicbrainz
+git+https://github.com/sertansenturk/symbtrdataextractor.git@v2.1.0#egg=symbtrdataextractor
+git+https://github.com/burakuyar/MusicXMLConverter.git@v1.2.1#egg=musicxmlconverter
+git+https://github.com/sertansenturk/makammusicbrainz.git@v1.3.0#egg=makammusicbrainz
 git+https://github.com/alastair/python-musicbrainzngs.git@v0.6#egg=musicbrainzngs
-git+https://github.com/sertansenturk/fileoperations_python.git@v1.1#egg=fileoperations-python
+git+https://github.com/sertansenturk/fileoperations_python.git@v1.1.1#egg=fileoperations-python
 pandas==0.18.0
 future
