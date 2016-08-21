@@ -163,7 +163,6 @@ class TxtExtras:
 
         # correct the offsets and the gracenote durations
         df = pd.read_csv(txt_file, sep=b'\t')
-        row = dict()
         for index, row in df.iterrows():
             # recompute the erroneous gracenotes with non-zero duration
             if row['Kod'] == 8 and row['Ms'] > 0:
@@ -198,6 +197,25 @@ class TxtExtras:
 
         cls._check_premature_ending(row)
 
+        return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')\
+
+    @classmethod
+    def correct_rests(cls, txt_file):
+        # correct the offsets and the gracenote durations
+        df = pd.read_csv(txt_file, sep=b'\t')
+        rest_list = [9, -1, -1, 'Es', 'Es']
+        for index, row in df.iterrows():
+            val_list = [row['Kod'], row['Koma53'], row['KomaAE'],
+                        row['Nota53'], row['NotaAE']]
+
+            # check if rest
+            if any(v1 == v2 for v1, v2 in zip(val_list[1:], rest_list[1:])):
+                # check if all fields are correct
+                if any(v1 != v2 for v1, v2 in zip(val_list, rest_list)):
+                    (row['Kod'], row['Koma53'], row['KomaAE'],
+                     row['Nota53'], row['NotaAE']) = rest_list
+
+                    df.iloc[index] = row
         return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @staticmethod
@@ -235,7 +253,8 @@ class TxtExtras:
 
         # MusicXML conversion
         piece = SymbTrScore(txt_file, mu2_file, symbtrname=symbtr_name,
-                            mbid_url=mbids)
+                            mbid_url=mbids, verbose=True)
+
         return piece.convertsymbtr2xml(verbose=False)
 
     @staticmethod
