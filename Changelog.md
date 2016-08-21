@@ -1,5 +1,6 @@
 #### SymbTr-extras v0.3.1
  - Updated required packages
+ - Added rest row correction
 
 #### SymbTr-extras v0.3.0
  - Improved code quality
