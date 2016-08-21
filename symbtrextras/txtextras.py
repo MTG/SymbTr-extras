@@ -197,7 +197,7 @@ class TxtExtras:
 
         cls._check_premature_ending(row)
 
-        return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')\
+        return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @classmethod
     def correct_rests(cls, txt_file):
