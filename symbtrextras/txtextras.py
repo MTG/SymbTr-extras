@@ -199,8 +199,8 @@ class TxtExtras:
 
         return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
-    @classmethod
-    def correct_rests(cls, txt_file):
+    @staticmethod
+    def correct_rests(txt_file):
         # correct the offsets and the gracenote durations
         df = pd.read_csv(txt_file, sep=b'\t')
         rest_list = [9, -1, -1, 'Es', 'Es']
@@ -208,14 +208,14 @@ class TxtExtras:
             val_list = [row['Kod'], row['Koma53'], row['KomaAE'],
                         row['Nota53'], row['NotaAE']]
 
-            # check if rest
-            if any(v1 == v2 for v1, v2 in zip(val_list[1:], rest_list[1:])):
-                # check if all fields are correct
-                if any(v1 != v2 for v1, v2 in zip(val_list, rest_list)):
-                    (row['Kod'], row['Koma53'], row['KomaAE'],
-                     row['Nota53'], row['NotaAE']) = rest_list
-
-                    df.iloc[index] = row
+            # check if rest. If yes, check if valid
+            is_rest = any(v1 == v2 for v1, v2 in
+                          zip(val_list[1:], rest_list[1:]))
+            is_invalid = any(v1 != v2 for v1, v2 in zip(val_list, rest_list))
+            if is_rest and is_invalid:
+                (row['Kod'], row['Koma53'], row['KomaAE'], row['Nota53'],
+                 row['NotaAE']) = rest_list
+                df.iloc[index] = row
         return df.to_csv(None, sep=b'\t', index=False, encoding='utf-8')
 
     @staticmethod
