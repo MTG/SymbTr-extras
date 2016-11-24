@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MTG/SymbTr-extras.svg?branch=master)](https://travis-ci.org/MTG/SymbTr-extras) [![Code Climate](https://codeclimate.com/github/MTG/SymbTr-extras/badges/gpa.svg)](https://codeclimate.com/github/MTG/SymbTr-extras) [![codecov.io](https://codecov.io/github/MTG/SymbTr-extras/coverage.svg?branch=master)](https://codecov.io/github/MTG/SymbTr-extras?branch=master)
+[![Build Status](https://travis-ci.org/MTG/SymbTr-extras.svg?branch=master)](https://travis-ci.org/MTG/SymbTr-extras) [![Code Climate](https://codeclimate.com/github/MTG/SymbTr-extras/badges/gpa.svg)](https://codeclimate.com/github/MTG/SymbTr-extras) [![codecov.io](https://codecov.io/github/MTG/SymbTr-extras/coverage.svg?branch=master)](https://codecov.io/github/MTG/SymbTr-extras?branch=master) [![DOI](https://zenodo.org/badge/52790094.svg)](https://zenodo.org/badge/latestdoi/52790094)
 
 SymbTr-extras
 ===========
