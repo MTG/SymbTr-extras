@@ -1,3 +1,6 @@
+#### SymbTr-extras v0.3.2
+ - Updated makammusicbrainz package version
+
 #### SymbTr-extras v0.3.1
  - Updated required packages
  - Added rest row correction
