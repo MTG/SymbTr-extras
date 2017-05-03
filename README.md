@@ -8,6 +8,10 @@ Introduction
 ------------
 This repository hosts a set of tools to validate and manipulate the SymbTr scores and get basic statistics from them. The tools are mostly used for maintaining the [SymbTr repository](https://github.com/MTG/SymbTr) and keeping a track of the stored score metadata and attributes.
 
+If you are using these tools in your work, please cite the dissertation:
+
+> Şentürk, S. (2016). [Computational Analysis of Audio Recordings and Music Scores for the Description and Discovery of Ottoman-Turkish Makam Music](http://sertansenturk.com/research/works/phd-thesis/). PhD thesis, Universitat Pompeu Fabra, Barcelona, Spain.
+
 Usage
 ------------
 Please refer to the interactive demos [apply_extras_txt_file.ipynb](https://github.com/MTG/SymbTr-extras/blob/master/apply_extras_txt_file.ipynb) and [change_symbtr_filename](https://github.com/MTG/SymbTr-extras/blob/master/change_symbtr_filename.ipynb) for the basic usage. To process many documents you can use the [jupyter notebooks](http://jupyter.org/) in the [wrapper](https://github.com/MTG/SymbTr-extras/tree/master/wrappers) folder.
@@ -35,7 +39,3 @@ Authors
 -------
 Sertan Senturk
 contact@sertansenturk.com
-
-Reference
--------
-Thesis
