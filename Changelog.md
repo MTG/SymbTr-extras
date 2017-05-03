@@ -1,3 +1,6 @@
+#### SymbTr-extras v0.4.0
+ - Added a wrapper for mu2 to MusicXML conversion (courtesy of Mogens Lundholm)
+
 #### SymbTr-extras v0.3.1
  - Updated required packages
  - Added rest row correction
