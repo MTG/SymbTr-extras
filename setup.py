@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 
 setup(name='symbtrextras',
-      version='0.3.2',
+      version='0.4.0',
       author='Sertan Senturk',
       author_email='contact AT sertansenturk DOT com',
       license='agpl 3.0',
