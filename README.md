@@ -39,7 +39,3 @@ Authors
 -------
 Sertan Senturk
 contact@sertansenturk.com
-
-Reference
--------
-Thesis
